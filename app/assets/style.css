@@ -1,0 +1,54 @@
+body {
+    background-color: #eee;
+}
+body.initial {
+    padding-top: 40px;
+    padding-bottom: 40px;
+}
+.initial form {
+    max-width: 330px;
+    padding: 15px;
+    margin: 0 auto;
+}
+.places {
+    height: 70%;
+    overflow: auto;
+}
+
+.places .panel,
+.margin-bottom {
+    margin-bottom: 5px;
+}
+
+.places .panel-body {
+    padding: 5px 10px;
+}
+
+.places .panel.selected {
+    background: gainsboro;
+}
+
+.infowindow {
+    font-size: 13px !important;
+    font-weight: 400 !important;
+    max-width: 200px;
+}
+
+.infowindow .title {
+    font-weight: 500 !important;
+    font-size: 14px !important;
+    overflow: hidden;
+}
+
+.places img {
+    height: 100px !important;
+    margin-right: 3px;
+    margin-bottom: 3px;
+}
+
+star-rating-comp {
+    float: right;
+}
+.angular-google-map-container {
+    height: 100%;
+}

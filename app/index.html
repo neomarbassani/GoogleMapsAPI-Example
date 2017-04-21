@@ -1,0 +1,71 @@
+
+<html ng-app="GoogleMapApp">
+    <head>
+        <title>Google Places API</title>
+
+        <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="assets/style.css">
+
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCWi1kUt1p4qZ0nAHqzHs7euqt5F4STkwY&libraries=places"></script>
+        <script src="node_modules/angular/angular.min.js"></script>
+        <script src="node_modules/lodash/lodash.min.js"></script>
+        <script src="node_modules/angular-simple-logger/dist/angular-simple-logger.min.js"></script>
+        <script src="node_modules/angular-google-maps/dist/angular-google-maps.min.js"></script>
+        <script src="node_modules/angular1-star-rating/dist/index.js"></script>
+    </head>
+    <body ng-controller="MapCtrl" ng-class="{ 'initial': !map }">
+
+        <div  ng-class="{ 'col-xs-3': map }">
+            <form>
+                <div class="form-group">
+                    <label >Endereço</label>
+                    <p ng-if="!map">Você pode buscar utilizando CEP ou seu endereço completo.</p>
+                    <input type="text" class="form-control" placeholder="Endereço" ng-model="address">
+                </div>
+                <div>
+                    <button class="btn btn-primary btn-block" ng-click="find(address);" ng-disabled="!address">Buscar</button>
+                    <button class="btn btn-success btn-block" ng-click="getLocation();" ng-if="canUseLocation">Utilizar minha localização</button>
+                </div>
+            </form>
+            <div ng-if="places">
+                <label>Lista de Oficinas:</label> {{places.length}}
+                <star-rating-comp rating="p.rating" show-half-stars="true" show-hover-stars="true" on-rating-change="filterPlaces($event)"></star-rating-comp>
+                <div class="places">
+                    <div class="panel panel-default" ng-repeat="p in places track by $index" ng-click="selectPlace(p.place_id, $index)" ng-class="{ 'selected': place.selected == $index }">
+                        <div class="panel-body">
+                            <div>
+                                <strong>{{p.name}}</strong>
+                                <span class="label label-success" ng-if="place.opening_hours.open_now && place.selected == $index">Aberto</span>
+                                <star-rating-comp rating="p.rating" show-half-stars="true" size="'small'" read-only="true"></star-rating-comp>
+                            </div>
+                            <div>{{p.vicinity}}</div>
+                            <div ng-if="place.selected == $index">
+                                <div class="margin-bottom">{{place.formatted_phone_number}}</div>
+                                <div class="margin-bottom" ng-if="place.website"><a href="{{place.website}}" target="_blank">{{place.website}}</a></div>
+                                <div class="margin-bottom" ng-if="place.opening_hours">
+                                    <strong>Horários de funcionamento:</strong>
+                                    <div ng-repeat="open in place.opening_hours.weekday_text">{{open}}</div>
+                                </div>
+                                <div if="place.photos">
+                                    <img ng-src="{{photo.getUrl({maxWidth: 200, maxHeight: 200})}}" class="img-thumbnail" ng-repeat="photo in place.photos">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-9">
+            <ui-gmap-google-map center='map.center' zoom='map.zoom' ng-if="map">
+                <ui-gmap-marker coords="{ latitude: p.geometry.location.lat(), longitude: p.geometry.location.lng() }"
+                    ng-repeat="p in places" idkey="p.place_id" click="selectMarker">
+                </ui-gmap-marker>
+            </ui-gmap-google-map>
+        </div>
+    </body>
+
+    <script src="js/app.js"></script>
+    <script src="js/controller.js"></script>
+    <script src="js/service.js"></script>
+
+</html>
